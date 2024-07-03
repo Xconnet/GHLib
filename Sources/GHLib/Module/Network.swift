@@ -8,8 +8,7 @@
 //import Hap
 import Moya
 import SwiftyJSON
-import Foundation
-//import GoogleSignIn
+import GoogleSignIn
 
 public class NetworkManager {
     public static let shared = NetworkManager()
@@ -67,35 +66,35 @@ public class NetworkManager {
     /// - Parameter completion: 使用获取的 Google Token 处理 closure
     ///
     /// - Author: GH
-//    public func authWithGoogle(completion: @escaping (_ token: String?) -> Void) {
-//        // 使用 GIDSignIn 的 signIn，使用 getRootView Controller 获取当前 View Controller，将 Action Button 显示于当前 View Controller 上
-//        GIDSignIn.sharedInstance.signIn(withPresenting: Self.getRootViewController()) { result, error in
-//            guard error == nil else {
-//                print("Authentication error: \(error!.localizedDescription)")
-//                completion(nil)
-//                return
-//            }
-//            
-//            // 获取 Google Token
-//            let googleToken = result?.user.idToken?.tokenString
-//            
-//            print("Google Token: \(googleToken)")
-//            
-//            completion(googleToken)
-//        }
-//    }
+    public func authWithGoogle(completion: @escaping (_ token: String?) -> Void) {
+        // 使用 GIDSignIn 的 signIn，使用 getRootView Controller 获取当前 View Controller，将 Action Button 显示于当前 View Controller 上
+        GIDSignIn.sharedInstance.signIn(withPresenting: Self.getRootViewController()) { result, error in
+            guard error == nil else {
+                print("Authentication error: \(error!.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            // 获取 Google Token
+            let googleToken = result?.user.idToken?.tokenString
+            
+            print("Google Token: \(googleToken)")
+            
+            completion(googleToken)
+        }
+    }
     
     /// 获取当前视图
     /// - Returns: 当前 UIViewController
     ///
     /// - Author: GH
-//    public static func getRootViewController() -> UIViewController {
-//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//              let rootViewController = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController else {
-//            fatalError("No root view controller found.")
-//        }
-//        return rootViewController
-//    }
+    public static func getRootViewController() -> UIViewController {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController else {
+            fatalError("No root view controller found.")
+        }
+        return rootViewController
+    }
 
     /// 释放资源
     ///
