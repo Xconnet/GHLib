@@ -39,6 +39,9 @@ public class ModuleConfig {
     /// JSON 中检测 Refresh Token 的键名，默认 "refreshToken"
     public var refreshTokenKey: String = "refreshToken"
     
+    /// JSON 中判断条件的键值对，默认 ["code": "0"]
+    public var successCondition: [String: String] = ["code": "0"]
+    
     /// 重置所有配置为默认值
     ///
     /// - Author: GH
@@ -52,5 +55,6 @@ public class ModuleConfig {
         self.toastDisplayDuration = 2.0
         self.accessTokenKey = "accessToken"
         self.refreshTokenKey = "refreshToken"
+        self.successCondition = ["code": "0"]
     }
 }

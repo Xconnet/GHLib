@@ -5,7 +5,6 @@
 //  Created by GH on 7/2/24.
 //
 
-//import Hap
 import Moya
 import SwiftyJSON
 import GoogleSignIn
@@ -22,36 +21,40 @@ public class NetworkManager {
         pluginProvider = MoyaProvider<MultiTarget>(session: session, plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))])
         testProvider = MoyaProvider<MultiTarget>(stubClosure: MoyaProvider.immediatelyStub)
     }
-
+    
     public var provider: MoyaProvider<MultiTarget>
     public var pluginProvider: MoyaProvider<MultiTarget>
     public var testProvider: MoyaProvider<MultiTarget>
-
-    /// 判断回传 json 的 code 字段是否为 0
+    
+    /// 判断回传 JSON 的字段值是否符合预期条件
     /// - Parameters:
     ///   - json: JSON 实例
-    ///   - enableSuccessHaptic: 是否开启成功时震动
-    ///   - enableFailureHaptic: 是否开启失败时震动
-    ///   - successAction: 字段为 0 时执行的闭包，传递 `json["data"]` 作为参数
-    ///   - failureAction: 字段不为 0 时执行的可选闭包
+    ///   - successFeedback: 是否在成功时开启反馈震动，默认为 false
+    ///   - failureFeedback: 是否在失败时开启反馈震动，默认为 false
+    ///   - successAction: 当 JSON 中的指定字段值符合预期条件时执行的闭包，传递 `json["data"]` 作为参数
+    ///   - failureAction: 当 JSON 中的指定字段值不符合预期条件时执行的可选闭包
     ///
     /// - Author: GH
     public static func codeOK(_ json: JSON, successFeedback: Bool = false, failureFeedBack: Bool = false, successAction: (_ data: JSON) -> Void, failureAction: (() -> Void)? = nil) {
-        if json["code"].stringValue == "0" {
-//            if successFeedback {
-//                Hap.success()
-//                ToastManager.shared.completeToast(title: json["message"].stringValue)
-//            }
+        let condition = ModuleConfig.shared.successCondition
+        let key = condition.keys.first!
+        let value = condition.values.first!
+        
+        if json[key].stringValue == value {
+            if successFeedback {
+                Hap.success()
+                ToastManager.shared.completeToast(title: json["message"].stringValue)
+            }
 #if DEBUG
             print("---Successful---")
-            print("Code: \(json["code"].stringValue)")
+            print("Code: \(json[key].stringValue)")
             print("Message: \(json["message"].stringValue)")
             print(json["data"])
             print("---Done---")
 #endif
             successAction(json["data"])
         } else {
-//            if failureFeedBack { Hap.error() }
+            if failureFeedBack { Hap.error() }
 #if DEBUG
             print("Error message: \n\(json["message"])")
 #endif
@@ -60,7 +63,7 @@ public class NetworkManager {
             failureAction?()
         }
     }
-
+    
     // TODO: 使用 Apple 登陆/注册 封装进来
     /// 使用 Google 登陆
     /// - Parameter completion: 使用获取的 Google Token 处理 closure
@@ -95,20 +98,20 @@ public class NetworkManager {
         }
         return rootViewController
     }
-
+    
     /// 释放资源
     ///
     /// - Author: GH
     public func releaseResources() {
         // 清理缓存
         URLCache.shared.removeAllCachedResponses()
-
+        
         // 取消所有正在进行的网络请求
         cancelAllRequests()
         
         print("NetworkManager resources released.")
     }
-
+    
     /// 取消所有请求
     ///
     /// - Author: GH

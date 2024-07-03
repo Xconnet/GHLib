@@ -24,7 +24,8 @@ public class ToastManager: ObservableObject {
     public var banner = AlertToast(displayMode: .banner(.pop), type: .complete(.green))
     
     /// 显示加载中的 Toast
-    /// - Parameter title: Toast 的标题
+    ///   - title: Toast 的标题
+    ///   - subTitle: Toast 的副标题，可选
     ///
     /// - Author: GH
     public func loadingToast() {
@@ -53,6 +54,10 @@ public class ToastManager: ObservableObject {
         }
     }
     
+    /// 显示 HUD Toast
+    /// - Parameters:
+    ///   - title: Toast 的标题
+    ///   - subTitle: Toast 的副标题，可选
     public func HUDToast(title: String, subTitle: String? = nil) {
         Async.main {
             self.hud = AlertToast(
@@ -83,6 +88,9 @@ public class ToastManager: ObservableObject {
         }
     }
     
+    /// 隐藏 Loading Toast
+    ///
+    /// - Author: GH
     public func hideLoadingToast() {
         Async.main {
             self.showLoadingToast = false
