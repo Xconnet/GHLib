@@ -24,7 +24,7 @@ public extension Data {
     }
 }
 
-extension String {
+public extension String {
     /// 将对应的 Base64 加密字符串转为 Base64Url 字符串
     /// - Returns: Base64Url String
     ///
