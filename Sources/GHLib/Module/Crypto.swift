@@ -12,15 +12,17 @@ public class CryptoManager {
     public static let shared = CryptoManager()
     private init() {}
     
-    /// 非对称密钥生成函数 http://task.eachtech.top:8090/pages/viewpage.action?pageId=37716339
+    /// 非对称密钥生成函数
     /// - Parameters:
-    ///   - keySize: 密钥大小（位）
     ///   - publicTag: 公钥标识
     ///   - privateTag: 私钥标识
     /// - Returns: 公钥与私钥
     ///
     /// - Author: GH
-    public static func generateKeyPair(keySize: Int = 2048, publicTag: String, privateTag: String) -> (publicKey: SecKey?, privateKey: SecKey?) {
+    public static func generateKeyPair(publicTag: String, privateTag: String) -> (publicKey: SecKey?, privateKey: SecKey?) {
+        // 使用配置中的密钥大小
+        let keySize = ModuleConfig.shared.keySize
+        
         // 私钥参数
         let privateKeyParameters: [String: Any] = [
             kSecAttrIsPermanent as String: true,
@@ -46,7 +48,7 @@ public class CryptoManager {
         return (publicKey, privateKey)
     }
     
-    /// 加载本地公钥 http://task.eachtech.top:8090/pages/viewpage.action?pageId=37716345
+    /// 加载本地公钥
     /// - Parameter pemFileName: pem 文件名
     /// - Returns: SecKey 类型公钥
     ///
@@ -90,7 +92,7 @@ public class CryptoManager {
         return publicKey
     }
     
-    /// 使用公钥加密`Data` http://task.eachtech.top:8090/pages/viewpage.action?pageId=39583820
+    /// 使用公钥加密`Data`
     /// - Parameters:
     ///   - data: 待加密数据
     ///   - publicKey: 公钥
@@ -98,8 +100,8 @@ public class CryptoManager {
     ///
     /// - Author: GH
     public func encrypt(data: Data, with publicKey: SecKey) -> Data? {
-        // 选择加密算法，使用 RSA 加密并且配合 OAEP SHA-1 填充模式
-        let algorithm: SecKeyAlgorithm = .rsaEncryptionOAEPSHA1
+        // 使用配置中的加密算法
+        let algorithm: SecKeyAlgorithm = ModuleConfig.shared.encryptionAlgorithm
         
         // 检查公钥是否支持所选算法
         guard SecKeyIsAlgorithmSupported(publicKey, .encrypt, algorithm) else {
