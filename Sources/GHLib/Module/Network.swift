@@ -18,7 +18,7 @@ public class NetworkManager {
         let session = Session(configuration: configuration)
         
         provider = MoyaProvider<MultiTarget>(session: session)
-        pluginProvider = MoyaProvider<MultiTarget>(session: session, plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))])
+        pluginProvider = MoyaProvider<MultiTarget>(session: session, plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .requestBody))])
         testProvider = MoyaProvider<MultiTarget>(stubClosure: MoyaProvider.immediatelyStub)
     }
     
@@ -59,7 +59,7 @@ public class NetworkManager {
             print("Error message: \n\(json["message"])")
 #endif
             // 显示错误的 Toast
-            ToastManager.shared.errorToast(title: json["message"].stringValue)
+            ToastManager.shared.HUDToast(successful: false, title: json["message"].stringValue)
             failureAction?()
         }
     }

@@ -8,7 +8,7 @@ let package = Package(
     products: [
         .library(
             name: "GHLib",
-            targets: ["GHLib"]),
+            targets: ["GHLib"])
     ],
     dependencies: [
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "24.0.0")),

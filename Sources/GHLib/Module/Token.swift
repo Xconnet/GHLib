@@ -124,6 +124,6 @@ public actor TokenManager {
     ///
     /// - Author: GH
     public func bindingDeviceToken(_ token: String) {
-        // 实现发送设备令牌至后端的代码
+        
     }
 }
