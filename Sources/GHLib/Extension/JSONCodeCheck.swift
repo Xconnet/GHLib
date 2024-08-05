@@ -25,7 +25,7 @@ import SwiftyJSON
     if json[key].stringValue == value {
         if successFeedback {
             Hap.success()
-            //             ToastManager.shared.completeToast(title: json["message"].stringValue)
+//            ToastManager.shared.completeToast(title: json["message"].stringValue)
         }
         
         successAction(json["data"])
