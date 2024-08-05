@@ -1,6 +1,6 @@
 //
 //  Crypto.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
@@ -8,10 +8,8 @@
 import Foundation
 import CryptoSwift
 
-public class CryptoManager {
-    public static let shared = CryptoManager()
-    private init() {}
-    
+/// `CryptoManager` 结构体提供了加密操作的封装方法。
+public struct CryptoManager {
     /// 非对称密钥生成函数
     /// - Parameters:
     ///   - publicTag: 公钥标识
@@ -19,6 +17,7 @@ public class CryptoManager {
     /// - Returns: 公钥与私钥
     ///
     /// - Author: GH
+    @MainActor
     public static func generateKeyPair(publicTag: String, privateTag: String) -> (publicKey: SecKey?, privateKey: SecKey?) {
         // 使用配置中的密钥大小
         let keySize = ModuleConfig.shared.keySize
@@ -31,9 +30,9 @@ public class CryptoManager {
             kSecAttrKeySizeInBits as String: keySize
         ]
         
-        // 生成私钥
         var error: Unmanaged<CFError>?
         
+        // 生成私钥
         guard let privateKey = SecKeyCreateRandomKey(privateKeyParameters as CFDictionary, &error) else {
             print("Failed to generate private key: \((error?.takeRetainedValue()) as Error?)")
             return (nil, nil)
@@ -56,18 +55,12 @@ public class CryptoManager {
     public static func loadPublicKey(from pemFileName: String) -> SecKey? {
         // 尝试从应用的 bundle 中加载指定名称的 PEM 文件，并读取里面的字符
         guard let pemFilepath = Bundle.main.path(forResource: pemFileName, ofType: "pem"),
-              let pemString = try? String(contentsOfFile: pemFilepath) else {
+              let pemString = try? String(contentsOfFile: pemFilepath, encoding: .utf8) else {
             print("Failed to load PEM file")
             return nil
         }
         
-        // 从 PEM 字符串中移除标头、标尾和换行符，留下 Base64 编码的公钥部分
-        let base64String = pemString
-            .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "\r\n", with: "")
-            .replacingOccurrences(of: "\n", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let base64String = base64FromPEM(pemString)
         
         // 将其转换为 data
         guard let data = Data(base64Encoded: base64String) else {
@@ -99,8 +92,8 @@ public class CryptoManager {
     /// - Returns: 密文
     ///
     /// - Author: GH
-    public func encrypt(data: Data, with publicKey: SecKey) -> Data? {
-        // 使用配置中的加密算法
+    @MainActor
+    public static func encrypt(data: Data, with publicKey: SecKey) -> Data? {
         let algorithm: SecKeyAlgorithm = ModuleConfig.shared.encryptionAlgorithm
         
         // 检查公钥是否支持所选算法
@@ -128,8 +121,8 @@ public class CryptoManager {
     /// - Returns: 密文
     ///
     /// - Author: GH
-    public func encrypt(string: String, with publicKey: SecKey) -> Data? {
-        // 首先尝试将字符串转换为 Data
+    @MainActor
+    public static func encrypt(string: String, with publicKey: SecKey) -> Data? {
         guard let data = string.data(using: .utf8) else {
             print("Error: Unable to convert string to Data")
             return nil
@@ -156,7 +149,7 @@ public class CryptoManager {
     /// - Returns: 密文
     ///
     /// - Author: GH
-    public func hmacSHA256(_ message: String, secret: String) -> String? {
+    public static func hmacSHA256(_ message: String, secret: String) -> String? {
         do {
             // variant: HMAC-SHA-256 哈希函数
             // key: 将密钥转为字节数组

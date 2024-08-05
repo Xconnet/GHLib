@@ -1,99 +1,74 @@
 //
 //  Hap.swift
-//
+//  GHLib
 //
 //  Created by GH on 7/3/24.
 //
 
 import UIKit
 
-public struct Hap {public struct Hap {
+/// `Hap` 结构体提供了各种触觉反馈生成器的封装方法。
+@MainActor
+public struct Hap {
+    /// 触发错误通知反馈。
+    ///
+    /// - Author: GH
     public static func error() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
     }
-
+    
+    /// 触发成功通知反馈。
+    ///
+    /// - Author: GH
     public static func success() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
-
+    
+    /// 触发轻度触觉反馈。
+    ///
+    /// - Author: GH
     public static func light() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
-
+    
+    /// 触发中度触觉反馈。
+    ///
+    /// - Author: GH
     public static func medium() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
-
+    
+    /// 触发重度触觉反馈。
+    ///
+    /// - Author: GH
     public static func heavy() {
-        let generator = UIImpactFeedbackGenerator(style: .heavy)
-        generator.impactOccurred()
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
     }
-
+    
+    /// 触发轻柔触觉反馈。
+    ///
+    /// - Note: 仅在 iOS 13.0 及以上版本可用。
+    /// - Author: GH
     public static func soft() {
         if #available(iOS 13.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .soft)
-            generator.impactOccurred()
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         }
     }
-
+    
+    /// 触发刚性触觉反馈。
+    ///
+    /// - Note: 仅在 iOS 13.0 及以上版本可用。
+    /// - Author: GH
     public static func rigid() {
         if #available(iOS 13.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .rigid)
-            generator.impactOccurred()
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
         }
     }
-
+    
+    /// 触发选择变化反馈。
+    ///
+    /// - Author: GH
     public static func selection() {
-        let generator = UISelectionFeedbackGenerator()
-        generator.selectionChanged()
-    }
-}
-
-    public static func error() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
-    }
-
-    public static func success() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-    }
-
-    public static func light() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-    }
-
-    public static func medium() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
-    }
-
-    public static func heavy() {
-        let generator = UIImpactFeedbackGenerator(style: .heavy)
-        generator.impactOccurred()
-    }
-
-    public static func soft() {
-        if #available(iOS 13.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .soft)
-            generator.impactOccurred()
-        }
-    }
-
-    public static func rigid() {
-        if #available(iOS 13.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .rigid)
-            generator.impactOccurred()
-        }
-    }
-
-    public static func selection() {
-        let generator = UISelectionFeedbackGenerator()
-        generator.selectionChanged()
+        UISelectionFeedbackGenerator().selectionChanged()
     }
 }

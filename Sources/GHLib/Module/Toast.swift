@@ -1,6 +1,6 @@
 //
 //  Toast.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
@@ -9,6 +9,7 @@ import Async
 import AlertToast
 import Foundation
 
+@MainActor
 public class ToastManager: ObservableObject {
     public static let shared = ToastManager()
     private init() {}

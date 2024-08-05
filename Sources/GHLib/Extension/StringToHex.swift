@@ -1,6 +1,6 @@
 //
 //  StringToHex.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/3/24.
 //

@@ -1,101 +1,113 @@
 //
 //  Keychain.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
 
 import KeychainSwift
 
-public class KeychainManager {
-    public static let shared = KeychainManager()
-    private let keychain = KeychainSwift()
-    
-    private init() {}
-    
+/// `KeychainManager` 用于管理 Keychain 中的各种令牌和标识符。
+public struct KeychainManager {
     /// 保存 Access Token 至 Keychain
     /// - Parameter accessToken: accessToken(String)
     ///
     /// - Author: GH
-    public func saveAccessTokenToKeychain(_ accessToken: String) {
-        keychain.set(accessToken, forKey: ModuleConfig.shared.tokenStorageKey)
+    public static func saveAccessTokenToKeychain(_ accessToken: String) {
+        KeychainSwift().set(accessToken, forKey: ModuleConfig.shared.tokenStorageKey)
+#if DEBUG
+        print("Access Token: \(accessToken)")
+        print("---Saved successfully!---")
+#endif
     }
     
     /// 保存 Refresh Token 至 Keychain
     /// - Parameter refreshToken: refreshToken(String)
     ///
     /// - Author: GH
-    public func saveRefreshTokenToKeychain(_ refreshToken: String) {
-        keychain.set(refreshToken, forKey: ModuleConfig.shared.refreshTokenStorageKey)
+    public static func saveRefreshTokenToKeychain(_ refreshToken: String) {
+        KeychainSwift().set(refreshToken, forKey: ModuleConfig.shared.refreshTokenStorageKey)
+#if DEBUG
+        print("Refresh Token: \(refreshToken)")
+        print("---Saved successfully!---")
+#endif
     }
     
     /// 从 Keychain 中读取 Access Token
     /// - Returns: accessToken(String)
     ///
     /// - Author: GH
-    public func getAccessTokenFromKeychain() -> String? {
-        return keychain.get(ModuleConfig.shared.tokenStorageKey)
+    public static func getAccessTokenFromKeychain() -> String? {
+        return KeychainSwift().get(ModuleConfig.shared.tokenStorageKey)
     }
     
     /// 从 Keychain 中读取 Refresh Token
     /// - Returns: refreshToken(String)
     ///
     /// - Author: GH
-    public func getRefreshTokenFromKeychain() -> String? {
-        return keychain.get(ModuleConfig.shared.refreshTokenStorageKey)
+    public static func getRefreshTokenFromKeychain() -> String? {
+        return KeychainSwift().get(ModuleConfig.shared.refreshTokenStorageKey)
     }
     
     /// 从 Keychain 中删除 Token
     ///
     /// - Author: GH
-    public func deleteToken() {
-        keychain.delete(ModuleConfig.shared.tokenStorageKey)
-        keychain.delete(ModuleConfig.shared.refreshTokenStorageKey)
+    public static func deleteToken() {
+        KeychainSwift().delete(ModuleConfig.shared.tokenStorageKey)
+        KeychainSwift().delete(ModuleConfig.shared.refreshTokenStorageKey)
     }
     
     /// 保存 Device Token 至 Keychain
     /// - Parameter deviceToken: 设备令牌 (String)
     ///
     /// - Author: GH
-    public func saveDeviceTokenToKeychain(_ deviceToken: String) {
-        keychain.set(deviceToken, forKey: "DeviceToken")
+    public static func saveDeviceTokenToKeychain(_ deviceToken: String) {
+        KeychainSwift().set(deviceToken, forKey: "DeviceToken")
+#if DEBUG
+        print("Device Token: \(deviceToken)")
+        print("---Saved successfully!---")
+#endif
     }
     
     /// 从 Keychain 中读取 Device Token
     /// - Returns: 设备令牌 (String)
     ///
     /// - Author: GH
-    public func getDeviceTokenFromKeychain() -> String? {
-        return keychain.get("DeviceToken")
+    public static func getDeviceTokenFromKeychain() -> String? {
+        return KeychainSwift().get("DeviceToken")
     }
     
     /// 从 Keychain 中删除 Device Token
     ///
     /// - Author: GH
-    public func deleteDeviceToken() {
-        keychain.delete("DeviceToken")
+    public static func deleteDeviceToken() {
+        KeychainSwift().delete("DeviceToken")
     }
     
     /// 保存 UUID 至 Keychain
     /// - Parameter UUID: UUID 字符串
     ///
     /// - Author: GH
-    public func saveUUID(_ UUID: String) {
-        keychain.set(UUID, forKey: ModuleConfig.shared.uuidStorageKey)
+    public static func saveUUID(_ UUID: String) {
+        KeychainSwift().set(UUID, forKey: ModuleConfig.shared.uuidStorageKey)
+#if DEBUG
+        print("UUID: \(UUID)")
+        print("---Saved successfully!---")
+#endif
     }
     
     /// 从 Keychain 中读取 UUID
     /// - Returns: UUID 字符串
     ///
     /// - Author: GH
-    public func getUUID() -> String? {
-        return keychain.get(ModuleConfig.shared.uuidStorageKey)
+    public static func getUUID() -> String? {
+        return KeychainSwift().get(ModuleConfig.shared.uuidStorageKey)
     }
     
     /// 从 Keychain 中删除 UUID
     ///
     /// - Author: GH
-    public func deleteUUID() {
-        keychain.delete(ModuleConfig.shared.uuidStorageKey)
+    public static func deleteUUID() {
+        KeychainSwift().delete(ModuleConfig.shared.uuidStorageKey)
     }
 }

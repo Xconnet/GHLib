@@ -1,6 +1,6 @@
 //
 //  PhoneEmailValid.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
@@ -17,7 +17,7 @@ public extension String {
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: self)
     }
-
+    
     /// 验证手机号和邮箱格式
     /// - Returns: 是否为标准手机号格式(Bool)
     ///

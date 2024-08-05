@@ -1,6 +1,6 @@
 //
 //  Token.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
@@ -13,7 +13,7 @@ public actor TokenManager {
     
     /// 初始化时，将 Keychain 的 Token 取出
     private init() {
-        accessToken = KeychainManager.shared.getAccessTokenFromKeychain()
+        accessToken = KeychainManager.getAccessTokenFromKeychain()
     }
     
     /// Token
@@ -22,24 +22,24 @@ public actor TokenManager {
     private var isRefreshing = false
     
     /// 挂起的请求
-    private var pendingRequests: [(String?) -> Void] = []
+    private var pendingRequests: [CheckedContinuation<String?, Never>] = []
     
-    /// 提供一个同步方法来获取当前 Token
-    /// - Returns: 当前有效的 Token
-    ///
-    /// - Author: GH
-    public static func getTokenSync() -> String? {
-        let semaphore = DispatchSemaphore(value: 0)
-        var result: String?
-        
-        Task {
-            result = await shared.currentToken()
-            semaphore.signal()
-        }
-        
-        semaphore.wait()
-        return result
-    }
+    //    /// 提供一个同步方法来获取当前 Token
+    //    /// - Returns: 当前有效的 Token
+    //    ///
+    //    /// - Author: GH
+    //    public static func getTokenSync() -> String? {
+    //        let semaphore = DispatchSemaphore(value: 0)
+    //        var result: String?
+    //
+    //        Task {
+    //            result = await shared.currentToken()
+    //            semaphore.signal()
+    //        }
+    //
+    //        semaphore.wait()
+    //        return result
+    //    }
     
     /// 对外提供的异步函数
     /// - Returns: 当前有效的 Token
@@ -62,7 +62,7 @@ public actor TokenManager {
     private func refreshTokenIfNeeded() async -> String? {
         if isRefreshing {
             return await withCheckedContinuation { continuation in
-                pendingRequests.append(continuation.resume)
+                pendingRequests.append(continuation)
             }
         } else {
             // 标记开始刷新 Token
@@ -73,8 +73,8 @@ public actor TokenManager {
             accessToken = newToken
             
             // 通知所有等待的请求
-            for request in pendingRequests {
-                request(newToken)
+            for continuation in pendingRequests {
+                continuation.resume(returning: newToken)
             }
             pendingRequests.removeAll()
             
@@ -97,9 +97,10 @@ public actor TokenManager {
     /// - Parameter data: JSON 实例，会将 data 中 accessToken 字段提取并保存
     ///
     /// - Author: GH
+    @MainActor
     public static func saveAccessToken(_ data: JSON) {
         if let accessToken = data[ModuleConfig.shared.accessTokenKey].string {
-            KeychainManager.shared.saveAccessTokenToKeychain(accessToken)
+            KeychainManager.saveAccessTokenToKeychain(accessToken)
 #if DEBUG
             print("Access Token: \(accessToken)")
             print("---Saved successfully!---")
@@ -110,16 +111,17 @@ public actor TokenManager {
     /// - Parameter data: JSON 实例，会将 data 中 refreshToken 字段提取并保存
     ///
     /// - Author: GH
+    @MainActor
     public static func saveRefreshToken(_ data: JSON) {
         if let refreshToken = data[ModuleConfig.shared.refreshTokenKey].string {
-            KeychainManager.shared.saveRefreshTokenToKeychain(refreshToken)
+            KeychainManager.saveRefreshTokenToKeychain(refreshToken)
 #if DEBUG
             print("Refresh Token: \(refreshToken)")
             print("---Saved successfully!---")
 #endif
         }
     }
-
+    
     /// 发送 Device Token 至后端
     ///
     /// - Author: GH

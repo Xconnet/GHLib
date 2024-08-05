@@ -1,6 +1,6 @@
 //
 //  DismissKeyboard.swift
-//  XconTest
+//  GHLib
 //
 //  Created by GH on 6/27/24.
 //

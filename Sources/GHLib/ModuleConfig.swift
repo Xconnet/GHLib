@@ -1,15 +1,14 @@
 //
 //  ModuleConfig.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/3/24.
 //
 
-import Moya
 import Foundation
 
 public class ModuleConfig {
-    public static let shared = ModuleConfig()
+    nonisolated(unsafe) public static let shared = ModuleConfig()
     private init() {}
     
     /// 网络请求超时时间，默认 10 秒

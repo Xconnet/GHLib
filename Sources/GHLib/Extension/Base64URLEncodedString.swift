@@ -1,6 +1,6 @@
 //
 //  Base64URLEncodedString.swift
-//  CoreModule
+//  GHLib
 //
 //  Created by GH on 7/2/24.
 //
@@ -34,7 +34,7 @@ public extension String {
             .replacingOccurrences(of: "+", with: "-")   // 替换 '+' 为 '-'
             .replacingOccurrences(of: "/", with: "_")   // 替换 '/' 为 '_'
             .replacingOccurrences(of: "=", with: "")    // 删除所有 '='
-
+        
         return base64UrlEncodedString
     }
 }

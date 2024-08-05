@@ -1,14 +1,14 @@
 //
-//  Dividing.swift
-//  XconTest
+//  SwiftUIView.swift
+//  GHLib
 //
-//  Created by GH on 2024/5/13.
+//  Created by GH on 8/5/24.
 //
 
 import SwiftUI
 
 /// 带有文字的水平分割线
-public struct Dividing: View {
+public struct CustomDividing: View {
     /// 分割线文本
     public var text: String = ""
     /// 是否使用填充
